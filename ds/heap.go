@@ -1,5 +1,7 @@
 package ds
 
+import "errors"
+
 type Heap[T any] struct {
 	data []T
 	cmp  func(a, b T) bool
@@ -27,19 +29,29 @@ func (h *Heap[T]) Push(t T) {
 	h.bubbleUp(len(h.data) - 1)
 }
 
-func (h *Heap[T]) Pop() T {
-	r := h.data[1]
+func (h *Heap[T]) Pop() (T, error) {
+	var r T
+
+	if h.Empty() {
+		return r, errors.New("heap is empty")
+	}
+
+	r = h.data[1]
 
 	h.data[1], h.data[len(h.data)-1] = h.data[len(h.data)-1], h.data[1]
 
 	h.data = h.data[:len(h.data)-1]
 	h.bubbleDown(1)
 
-	return r
+	return r, nil
 }
 
 func (h *Heap[T]) Empty() bool {
-	return len(h.data) < 2
+	return h.Size() == 0
+}
+
+func (h *Heap[T]) Size() int {
+	return len(h.data) - 1
 }
 
 func (h *Heap[T]) bubbleDown(i int) {

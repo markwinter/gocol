@@ -15,9 +15,17 @@ func Test_MinHeap(t *testing.T) {
 	heap.Push(0)
 	heap.Push(6)
 
+	if heap.Size() != 7 {
+		t.Errorf("size was not 7: %v", heap.Size())
+	}
+
 	var sorted []int
-	for !heap.Empty() {
-		sorted = append(sorted, heap.Pop())
+	for e, err := heap.Pop(); err == nil; e, err = heap.Pop() {
+		sorted = append(sorted, e)
+	}
+
+	if heap.Size() != 0 {
+		t.Errorf("size was not 0: %v", heap.Size())
 	}
 
 	if !cmp.Equal(sorted, []int{0, 1, 3, 4, 5, 6, 7}) {
@@ -35,8 +43,8 @@ func Test_MaxHeap(t *testing.T) {
 	heap.Push(6)
 
 	var sorted []int
-	for !heap.Empty() {
-		sorted = append(sorted, heap.Pop())
+	for e, err := heap.Pop(); err == nil; e, err = heap.Pop() {
+		sorted = append(sorted, e)
 	}
 
 	if !cmp.Equal(sorted, []int{7, 6, 5, 4, 3, 1, 0}) {
